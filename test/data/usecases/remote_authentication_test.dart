@@ -38,7 +38,6 @@ void main() {
 
   test('Should call HttpClient with correct values', () async {
     await sut!.auth();
-    print('passou aqui?');
     verify(httpClient!.request(
       url: url,
       method: 'post',

@@ -11,5 +11,5 @@ class AuthenticationParams {
   AuthenticationParams({
     required this.email,
     required this.password,
-  })
+  });
 }

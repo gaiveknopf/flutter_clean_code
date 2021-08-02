@@ -30,22 +30,22 @@ class HttpAdapter {
 class ClientSpy extends Mock implements Client {}
 
 void main() {
-  HttpAdapter? sut;
-  ClientSpy? client;
-  String url = faker.internet.httpUrl();
+  late HttpAdapter sut;
+  late ClientSpy client;
+  late String url;
 
   setUp(() {
     client = ClientSpy();
-    sut = HttpAdapter(client!);
+    sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
   });
 
   group('POST', () {
     test('Should call post with correct values', () async {
-      await sut!
+      await sut
           .request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
-      verify(() => client!.post(
+      verify(() => client.post(
             Uri.parse(url),
             headers: {
               'Content-Type': 'application/json',
@@ -56,9 +56,9 @@ void main() {
     });
 
     test('Should call post without body', () async {
-      await sut!.request(url: url, method: 'post');
+      await sut.request(url: url, method: 'post');
 
-      verify(() => client!.post(any(), headers: any(named: 'headers')));
+      verify(() => client.post(any(), headers: any(named: 'headers')));
     });
   });
 }

@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http:
+  dio:
 
   cupertino_icons: ^1.0.3
 
@@ -19,6 +21,7 @@ dev_dependencies:
     sdk: flutter
   test: ^1.16.8
   mocktail: ^0.1.4
+  mockito: ^5.0.13
   faker: ^2.0.0
 
 flutter:

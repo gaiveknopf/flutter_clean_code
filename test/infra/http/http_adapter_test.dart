@@ -1,9 +1,11 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_app/infra/http/http_adapter.dart';
+import 'package:flutter_app/data/http/http.dart';
+
+import 'package:flutter_app/infra/http/http.dart';
 
 class ClientSpy extends Mock implements Client {}
 
@@ -75,12 +77,12 @@ void main() {
       expect(response, null);
     });
 
-    test('Should return null if post returns 204 with data', () async {
-      mockResponse(204);
+    test('Should return BadRequest if post returns 400', () async {
+      mockResponse(400);
 
-      final response = await sut.request(url: url, method: 'post');
+      final future = sut.request(url: url, method: 'post');
 
-      expect(response, null);
+      expect(future, throwsA(HttpError.badRequest));
     });
   });
 }

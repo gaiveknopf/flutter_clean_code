@@ -1,18 +1,19 @@
 import 'dart:convert';
+import 'package:meta/meta.dart';
 
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:mockito/mockito.dart';
 
 class HttpAdapter {
   final Client client;
   HttpAdapter(this.client);
 
   Future<void> request({
-    required String url,
-    required String method,
-    Map? body,
+    @required String url,
+    @required String method,
+    Map body,
   }) async {
     final headers = {
       'Content-Type': 'application/json',
@@ -30,9 +31,9 @@ class HttpAdapter {
 class ClientSpy extends Mock implements Client {}
 
 void main() {
-  late HttpAdapter sut;
-  late ClientSpy client;
-  late String url;
+  HttpAdapter sut;
+  ClientSpy client;
+  String url;
 
   setUp(() {
     client = ClientSpy();
@@ -45,20 +46,14 @@ void main() {
       await sut
           .request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
-      verify(() => client.post(
-            Uri.parse(url),
-            headers: {
-              'Content-Type': 'application/json',
-              'accept': 'application/json',
-            },
-            body: '{"any_key":"any_value"}',
-          ));
-    });
-
-    test('Should call post without body', () async {
-      await sut.request(url: url, method: 'post');
-
-      verify(() => client.post(any(), headers: any(named: 'headers')));
+      verify(client.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+        },
+        body: '{"any_key":"any_value"}',
+      ));
     });
   });
 }

@@ -49,9 +49,7 @@ void main() {
         url: url,
         method: 'post',
         body: {'email': params.email, 'password': params.password}));
-  }); 
-  ,
-  
+  });
 
   test('Should throw UnexpectedError if HttpClient returns 400', () async {
     mockHttpError(HttpError.badRequest);

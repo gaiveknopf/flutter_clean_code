@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: null,
                           child: Text(
                             'Entrar'.toUpperCase(),
                           )),

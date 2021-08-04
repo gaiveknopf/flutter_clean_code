@@ -50,7 +50,9 @@ class LoginPage extends StatelessWidget {
                                 icon: Icon(
                                   Icons.lock,
                                 ),
-                                errorText: snapshot.data,
+                                errorText: snapshot.data?.isEmpty == true
+                                    ? null
+                                    : snapshot.data,
                               ),
                               obscureText: true,
                               onChanged: presenter.validatePassword,

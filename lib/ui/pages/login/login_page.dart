@@ -31,7 +31,9 @@ class LoginPage extends StatelessWidget {
                               icon: Icon(
                                 Icons.email,
                               ),
-                              errorText: snapshot.data,
+                              errorText: snapshot.data?.isEmpty == true
+                                  ? null
+                                  : snapshot.data,
                             ),
                             keyboardType: TextInputType.emailAddress,
                             onChanged: presenter.validateEmail,

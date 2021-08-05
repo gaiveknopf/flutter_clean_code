@@ -14,7 +14,7 @@ void main() {
   String password;
 
   PostExpectation mockValidationCall(String field) => when(validation.validate(
-      field: field == null ? anyNamed('field') : null,
+      field: field == null ? anyNamed('field') : field,
       value: anyNamed('value')));
 
   void mockValidation({String field, String value}) {
@@ -81,6 +81,20 @@ void main() {
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
     sut.validatePassword(password);
+    sut.validatePassword(password);
+  });
+
+  test('Should emit email error if validation fails with correct password', () {
+    mockValidation(value: 'error', field: 'email');
+
+    sut.emailErrorStream
+        .listen(expectAsync1((error) => expect(error, 'error')));
+    sut.passwordErrorStream
+        .listen(expectAsync1((error) => expect(error, null)));
+    sut.isFormValidStream
+        .listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    sut.validateEmail(email);
     sut.validatePassword(password);
   });
 }

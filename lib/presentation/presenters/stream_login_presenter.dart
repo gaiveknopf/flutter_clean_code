@@ -6,6 +6,8 @@ import '../../domain/usecases/usecases.dart';
 
 import '../protocols/protocols.dart';
 
+import '../../ui/pages/pages.dart';
+
 class LoginState {
   String email;
   String password;
@@ -21,7 +23,7 @@ class LoginState {
       password != null;
 }
 
-class StreamLoginPresenter {
+class StreamLoginPresenter implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
   var _controller = StreamController<LoginState>.broadcast();

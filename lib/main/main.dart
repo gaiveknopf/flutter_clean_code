@@ -6,8 +6,11 @@ import 'package:flutter_app/ui/components/components.dart';
 import 'package:get/route_manager.dart';
 
 import 'package:flutter_app/main/factories/pages/login/login_page_factory.dart';
+import 'package:provider/provider.dart';
 
 void main() {
+  Provider.debugCheckInvalidValueType = null;
+
   runApp(App());
 }
 

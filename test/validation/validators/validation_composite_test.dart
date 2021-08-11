@@ -43,6 +43,7 @@ void main() {
     validation2 = FieldValidationSpy();
     when(validation2.field).thenReturn('any_field');
     mockValidation2(null);
+    validation3 = FieldValidationSpy();
     when(validation3.field).thenReturn('other_field');
     mockValidation3(null);
     sut = ValidationComposite([validation1, validation2, validation3]);

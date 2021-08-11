@@ -15,6 +15,7 @@ dependencies:
   http:
   provider:
   equatable:
+  flutter_secure_storage:
 
   cupertino_icons: ^1.0.3
 
@@ -23,7 +24,6 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: 
   test: 
-  mocktail: 
   mockito: 
   faker: ^2.0.0
 

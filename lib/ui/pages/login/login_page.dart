@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ui/components/error_snackbar.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/components.dart';
+import '../../../utils/i18n/i18n.dart';
+
 import 'components/components.dart';
+import '../../../ui/helpers/errors/errors.dart';
+import '../../../../ui/components/components.dart';
 import '../../pages/pages.dart';
 
 class LoginPage extends StatelessWidget {
@@ -34,7 +36,7 @@ class LoginPage extends StatelessWidget {
 
           presenter.mainErrorStream.listen((error) {
             if (error != null) {
-              showErrorMessage(context, error);
+              showErrorMessage(context, error.description);
             }
           });
 
@@ -71,7 +73,7 @@ class LoginPage extends StatelessWidget {
                             TextButton.icon(
                               onPressed: () {},
                               icon: Icon(Icons.person),
-                              label: Text('Criar Conta'),
+                              label: Text(R.strings.addAccount),
                             )
                           ],
                         ),

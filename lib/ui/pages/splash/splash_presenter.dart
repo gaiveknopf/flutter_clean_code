@@ -1,4 +1,4 @@
 abstract class SplashPresenter {
-  Future<void> loadCurrentAccount();
+  Future<void> checkAccount();
   Stream<String> get navigateToStream;
 }

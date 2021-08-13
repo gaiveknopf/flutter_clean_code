@@ -3,6 +3,7 @@ import 'package:flutter_app/ui/helpers/helpers.dart';
 import 'package:provider/provider.dart';
 
 import '../login_presenter.dart';
+import '../../../helpers/helpers.dart';
 
 class EmailInput extends StatelessWidget {
   @override
@@ -13,7 +14,7 @@ class EmailInput extends StatelessWidget {
         builder: (context, snapshot) {
           return TextFormField(
             decoration: InputDecoration(
-              labelText: 'Email',
+              labelText: R.strings.password,
               icon: Icon(
                 Icons.email,
               ),

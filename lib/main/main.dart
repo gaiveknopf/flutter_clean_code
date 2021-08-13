@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/main/factories/pages/pages.dart';
 
 import 'package:flutter_app/ui/components/components.dart';
 
@@ -23,14 +24,18 @@ class App extends StatelessWidget {
       title: 'Databox',
       // debugShowCheckedModeBanner: false,
       theme: makeAppTheme(),
-      initialRoute: '/login',
+      initialRoute: '/',
       getPages: [
-        GetPage(name: '/login', page: makeLoginPage),
+        GetPage(name: '/', page: makeSplashPage, transition: Transition.fade),
         GetPage(
-            name: '/surveys',
-            page: () => Scaffold(
-                  body: Text('Enquetes'),
-                )),
+            name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
+        GetPage(
+          name: '/surveys',
+          page: () => Scaffold(
+            body: Text('Enquetes'),
+          ),
+          transition: Transition.fadeIn,
+        ),
       ],
     );
   }

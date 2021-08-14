@@ -1,3 +1,4 @@
+import 'package:flutter_app/domain/helpers/helpers.dart';
 import 'package:meta/meta.dart';
 
 // import '../../../domain/entities/entities.dart';
@@ -16,7 +17,11 @@ class RemoteAddAccount {
 
   Future<void> add(AddAccountParams params) async {
     final body = RemoteAddAccountParams.fromDomain(params).toJson();
-    await httpClient.request(url: url, method: 'post', body: body);
+    try {
+      await httpClient.request(url: url, method: 'post', body: body);
+    } on HttpError {
+      throw DomainError.unexpected;
+    }
   }
 }
 

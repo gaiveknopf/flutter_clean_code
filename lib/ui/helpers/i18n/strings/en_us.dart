@@ -10,6 +10,8 @@ class EnUs implements Translation {
   String get email => 'Email';
   String get enter => 'Enter';
   String get login => 'Login';
+  String get name => 'Name';
   String get password => 'Password';
+  String get passwordConfirmation => 'Password confirmation';
   String get wait => 'Loading...';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../helpers/helpers.dart';
 
 void showDLoading(BuildContext context) {
   showDialog(
@@ -13,7 +14,7 @@ void showDLoading(BuildContext context) {
             SizedBox(
               height: 10,
             ),
-            Text('Aguarde...', textAlign: TextAlign.center),
+            Text(R.strings.wait, textAlign: TextAlign.center),
           ],
         ),
       ],

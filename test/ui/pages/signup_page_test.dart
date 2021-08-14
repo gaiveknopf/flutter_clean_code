@@ -17,6 +17,7 @@ StreamController<UIError> emailErrorController;
 StreamController<UIError> passwordErrorController;
 StreamController<UIError> passwordConfirmationErrorController;
 StreamController<UIError> mainErrorController;
+StreamController<String> navigateToController;
 StreamController<bool> isFormValidController;
 StreamController<bool> isLoadingController;
 
@@ -26,6 +27,7 @@ void initStreams() {
   passwordErrorController = StreamController<UIError>();
   passwordConfirmationErrorController = StreamController<UIError>();
   mainErrorController = StreamController<UIError>();
+  navigateToController = StreamController<String>();
   isFormValidController = StreamController<bool>();
   isLoadingController = StreamController<bool>();
 }
@@ -37,6 +39,7 @@ void mockStreams() {
   when(presenter.passwordConfirmationErrorStream)
       .thenAnswer((_) => passwordConfirmationErrorController.stream);
   when(presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
+  when(presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
   when(presenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
   when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
 }
@@ -47,6 +50,7 @@ void closeStreams() {
   passwordErrorController.close();
   passwordConfirmationErrorController.close();
   mainErrorController.close();
+  navigateToController.close();
   isFormValidController.close();
   isLoadingController.close();
 }
@@ -61,6 +65,7 @@ void main() {
       initialRoute: '/signup',
       getPages: [
         GetPage(name: '/signup', page: () => SignUpPage(presenter)),
+        GetPage(name: '/any_route', page: () => Scaffold(body: Text('fake page'))),
       ],
     );
     await tester.pumpWidget(signUpPage);
@@ -235,21 +240,43 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('Should present error message if authentication fails', (WidgetTester tester) async {
+  testWidgets('Should present error message if signUp fails', (WidgetTester tester) async {
     await loadPage(tester);
 
-    mainErrorController.add(UIError.invalidCredentials);
+    mainErrorController.add(UIError.emailInUse);
     await tester.pump();
 
-    expect(find.text('Credenciais inválidas.'), findsOneWidget);
+    expect(find.text('O email já está em uso.'), findsOneWidget);
   });
 
-  testWidgets('Should present error message if authentication throws', (WidgetTester tester) async {
+  testWidgets('Should present error message if signUp throws', (WidgetTester tester) async {
     await loadPage(tester);
 
     mainErrorController.add(UIError.unexpected);
     await tester.pump();
 
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
+  });
+
+  testWidgets('Should change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('/any_route');
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/any_route');
+    expect(find.text('fake page'), findsOneWidget);
+  });
+
+  testWidgets('Should not change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('');
+    await tester.pump();
+    expect(Get.currentRoute, '/signup');
+
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, '/signup');
   });
 }

@@ -14,7 +14,7 @@ class EmailInput extends StatelessWidget {
         builder: (context, snapshot) {
           return TextFormField(
             decoration: InputDecoration(
-              labelText: R.strings.password,
+              labelText: R.strings.email,
               icon: Icon(
                 Icons.email,
               ),

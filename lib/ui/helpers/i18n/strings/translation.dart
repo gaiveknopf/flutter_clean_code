@@ -1,4 +1,5 @@
 abstract class Translation {
+  String get msgEmailInUseError;
   String get msgInvalidCredentials;
   String get msgInvalidField;
   String get msgRequiredField;

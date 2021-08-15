@@ -71,8 +71,8 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   Future<void> auth() async {
     try {
       _isLoading.value = true;
-      final account = await authentication
-          .auth(AuthenticationParams(email: _email, password: _password));
+      final account =
+          await authentication.auth(AuthenticationParams(email: _email, password: _password));
       await saveCurrentAccount.save(account);
       _navigateTo.value = '/surveys';
     } on DomainError catch (error) {
@@ -86,7 +86,4 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
       _isLoading.value = false;
     }
   }
-
-  // ignore: must_call_super
-  void dispose() {}
 }

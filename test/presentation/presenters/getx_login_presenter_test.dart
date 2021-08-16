@@ -143,7 +143,8 @@ void main() {
     sut.validatePassword(password);
     await sut.auth();
 
-    verify(authentication!.auth(AuthenticationParams(email: email, password: password))).called(1);
+    verify(authentication!.auth(AuthenticationParams(email: email!, password: password!)))
+        .called(1);
   });
 
   test('Should call SaveCurrentAccount with correct value', () async {

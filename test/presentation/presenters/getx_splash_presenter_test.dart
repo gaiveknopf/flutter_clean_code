@@ -18,7 +18,7 @@ void main() {
   PostExpectation mockLoadCurrentAccountCall() => when(loadCurrentAccount.load());
 
   void mockLoadCurrentAccount({AccountEntity? account}) {
-    mockLoadCurrentAccountCall().thenAnswer((_) async => account);
+    mockLoadCurrentAccountCall().thenAnswer((_) async => account!);
   }
 
   void mockLoadCurrentAccountError() {

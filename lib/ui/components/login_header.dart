@@ -11,18 +11,21 @@ class LoginHeader extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomLeft,
           colors: [
-            Theme.of(context).primaryColorLight,
-            Theme.of(context).primaryColorDark,
+            Theme.of(context).primaryColor,
+            Theme.of(context).primaryColor,
           ],
         ),
         boxShadow: [
           BoxShadow(
-              offset: Offset(0, 0),
-              spreadRadius: 0,
-              blurRadius: 4,
-              color: Colors.black)
+            offset: Offset(0, 0),
+            spreadRadius: 0,
+            blurRadius: 4,
+            color: Colors.black,
+          )
         ],
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(80)),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(80),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(70.0),

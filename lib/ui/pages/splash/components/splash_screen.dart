@@ -24,8 +24,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     _colorAnimation = ColorTween(
-      begin: Colors.black.withOpacity(0.8),
-      end: Colors.black.withOpacity(0.92),
+      begin: Color.fromRGBO(15, 24, 34, 1).withOpacity(0.7),
+      end: Color.fromRGBO(15, 24, 34, 1).withOpacity(0.92),
     ).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -65,12 +65,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/ui/assets/images/splash.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
             child: AnimatedBuilder(
               animation: _colorAnimation,
               builder: (BuildContext context, Widget? child) {

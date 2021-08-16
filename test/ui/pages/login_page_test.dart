@@ -4,20 +4,21 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/route_manager.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:flutter_app/ui/helpers/helpers.dart';
 import 'package:flutter_app/ui/pages/pages.dart';
 
-class LoginPresenterSpy extends Mock implements LoginPresenter {}
+import 'login_page_test.mocks.dart';
 
 LoginPresenter? presenter;
-late StreamController<UIError> emailErrorController;
-late StreamController<UIError> passwordErrorController;
-late StreamController<UIError> mainErrorController;
-late StreamController<String> navigateToController;
-late StreamController<bool> isFormValidController;
-late StreamController<bool> isLoadingController;
+StreamController<UIError?>? emailErrorController;
+StreamController<UIError?>? passwordErrorController;
+StreamController<UIError?>? mainErrorController;
+StreamController<String>? navigateToController;
+StreamController<bool>? isFormValidController;
+StreamController<bool>? isLoadingController;
 
 void initStreams() {
   emailErrorController = StreamController<UIError>();
@@ -29,32 +30,33 @@ void initStreams() {
 }
 
 void mockStreams() {
-  when(presenter!.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
-  when(presenter!.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
-  when(presenter!.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
-  when(presenter!.navigateToStream).thenAnswer(((_) => navigateToController.stream));
-  when(presenter!.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
-  when(presenter!.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+  when(presenter?.emailErrorStream).thenAnswer((_) => emailErrorController?.stream);
+  when(presenter?.passwordErrorStream).thenAnswer((_) => passwordErrorController?.stream);
+  when(presenter?.mainErrorStream).thenAnswer((_) => mainErrorController?.stream);
+  when(presenter!.navigateToStream).thenAnswer(((_) => navigateToController!.stream));
+  when(presenter!.isFormValidStream).thenAnswer((_) => isFormValidController!.stream);
+  when(presenter!.isLoadingStream).thenAnswer((_) => isLoadingController!.stream);
 }
 
 void closeStreams() {
-  emailErrorController.close();
-  passwordErrorController.close();
-  mainErrorController.close();
-  navigateToController.close();
-  passwordErrorController.close();
-  isFormValidController.close();
-  isLoadingController.close();
+  emailErrorController!.close();
+  passwordErrorController!.close();
+  mainErrorController!.close();
+  navigateToController!.close();
+  passwordErrorController!.close();
+  isFormValidController!.close();
+  isLoadingController!.close();
 }
 
+@GenerateMocks([LoginPresenter])
 void main() {
   Future<void> loadPage(WidgetTester tester) async {
-    presenter = LoginPresenterSpy();
+    presenter = MockLoginPresenter();
     initStreams();
     mockStreams();
 
     final loginPage = GetMaterialApp(initialRoute: '/login', getPages: [
-      GetPage(name: '/login', page: () => LoginPage(presenter)),
+      GetPage(name: '/login', page: () => LoginPage(presenter!)),
       GetPage(name: '/any_route', page: () => Scaffold(body: Text('fake page'))),
     ]);
     await tester.pumpWidget(loginPage);
@@ -97,7 +99,7 @@ void main() {
   testWidgets('Should present error if email is invalid', (WidgetTester tester) async {
     await loadPage(tester);
 
-    emailErrorController.add(UIError.invalidField);
+    emailErrorController!.add(UIError.invalidField);
     await tester.pump();
 
     expect(find.text('Campo inválido'), findsOneWidget);
@@ -106,45 +108,25 @@ void main() {
   testWidgets('Should present error if email is empty', (WidgetTester tester) async {
     await loadPage(tester);
 
-    emailErrorController.add(UIError.requiredField);
+    emailErrorController!.add(UIError.requiredField);
     await tester.pump();
 
     expect(find.text('Campo obrigatório'), findsOneWidget);
-  });
-
-  testWidgets('Should present no error if email is valid', (WidgetTester tester) async {
-    await loadPage(tester);
-
-    // emailErrorController.add(null);
-    await tester.pump();
-
-    expect(find.descendant(of: find.bySemanticsLabel('Email'), matching: find.byType(Text)),
-        findsOneWidget);
   });
 
   testWidgets('Should present error if password is empty', (WidgetTester tester) async {
     await loadPage(tester);
 
-    passwordErrorController.add(UIError.requiredField);
+    passwordErrorController!.add(UIError.requiredField);
     await tester.pump();
 
     expect(find.text('Campo obrigatório'), findsOneWidget);
   });
 
-  testWidgets('Should present no error if password is valid', (WidgetTester tester) async {
-    await loadPage(tester);
-
-    // passwordErrorController.add(null);
-    await tester.pump();
-
-    expect(find.descendant(of: find.bySemanticsLabel('Senha'), matching: find.byType(Text)),
-        findsOneWidget);
-  });
-
   testWidgets('Should enable button if form is valid', (WidgetTester tester) async {
     await loadPage(tester);
 
-    isFormValidController.add(true);
+    isFormValidController!.add(true);
     await tester.pump();
 
     final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
@@ -154,7 +136,7 @@ void main() {
   testWidgets('Should disable button if form is invalid', (WidgetTester tester) async {
     await loadPage(tester);
 
-    isFormValidController.add(false);
+    isFormValidController!.add(false);
     await tester.pump();
 
     final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
@@ -164,7 +146,7 @@ void main() {
   testWidgets('Should call authentication on form submit', (WidgetTester tester) async {
     await loadPage(tester);
 
-    isFormValidController.add(true);
+    isFormValidController!.add(true);
     await tester.pump();
     await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
@@ -175,7 +157,7 @@ void main() {
   testWidgets('Should present loading', (WidgetTester tester) async {
     await loadPage(tester);
 
-    isLoadingController.add(true);
+    isLoadingController!.add(true);
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -184,9 +166,9 @@ void main() {
   testWidgets('Should hide loading', (WidgetTester tester) async {
     await loadPage(tester);
 
-    isLoadingController.add(true);
+    isLoadingController!.add(true);
     await tester.pump();
-    isLoadingController.add(false);
+    isLoadingController!.add(false);
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
@@ -195,7 +177,7 @@ void main() {
   testWidgets('Should present error message if authentication fails', (WidgetTester tester) async {
     await loadPage(tester);
 
-    mainErrorController.add(UIError.invalidCredentials);
+    mainErrorController!.add(UIError.invalidCredentials);
     await tester.pump();
 
     expect(find.text('Credenciais inválidas.'), findsOneWidget);
@@ -204,7 +186,7 @@ void main() {
   testWidgets('Should present error message if authentication throws', (WidgetTester tester) async {
     await loadPage(tester);
 
-    mainErrorController.add(UIError.unexpected);
+    mainErrorController!.add(UIError.unexpected);
     await tester.pump();
 
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
@@ -213,7 +195,7 @@ void main() {
   testWidgets('Should change page', (WidgetTester tester) async {
     await loadPage(tester);
 
-    navigateToController.add('/any_route');
+    navigateToController!.add('/any_route');
     await tester.pumpAndSettle();
 
     expect(Get.currentRoute, '/any_route');
@@ -223,11 +205,11 @@ void main() {
   testWidgets('Should not change page', (WidgetTester tester) async {
     await loadPage(tester);
 
-    navigateToController.add('');
+    navigateToController!.add('');
     await tester.pump();
     expect(Get.currentRoute, '/login');
 
-    // navigateToController.add(null);
+    navigateToController!.add('');
     await tester.pump();
     expect(Get.currentRoute, '/login');
   });

@@ -2,27 +2,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:flutter_app/ui/pages/splash/components/splash_screen.dart';
 import 'package:flutter_app/ui/pages/pages.dart';
 
-class SplashPresenterSpy extends Mock implements SplashPresenter {}
+import 'splash_page_test.mocks.dart';
 
+@GenerateMocks([SplashPresenter])
 void main() {
-  SplashPresenterSpy? presenter;
-  late StreamController<String?> navigateToController;
+  MockSplashPresenter? presenter;
+  late StreamController<String> navigateToController;
 
   Future<void> loadPage(WidgetTester tester) async {
-    presenter = SplashPresenterSpy();
-    navigateToController = StreamController<String?>();
-    when(presenter!.navigateToStream)
-        .thenAnswer(((_) => navigateToController.stream as Stream<String>));
+    presenter = MockSplashPresenter();
+    navigateToController = StreamController<String>();
+    when(presenter!.navigateToStream).thenAnswer(((_) => navigateToController.stream));
     await tester.pumpWidget(
       GetMaterialApp(
         initialRoute: '/',
         getPages: [
-          GetPage(name: '/', page: () => SplashPage(presenter: presenter)),
+          GetPage(name: '/', page: () => SplashPage(presenter: presenter!)),
           GetPage(
               name: '/any_route',
               page: () => Scaffold(
@@ -65,7 +65,7 @@ void main() {
     await tester.pump();
     expect(Get.currentRoute, '/');
 
-    navigateToController.add(null);
+    navigateToController.add('');
     await tester.pump();
     expect(Get.currentRoute, '/');
   });

@@ -10,13 +10,14 @@ import 'package:flutter_app/ui/pages/pages.dart';
 class SplashPresenterSpy extends Mock implements SplashPresenter {}
 
 void main() {
-  SplashPresenterSpy presenter;
-  StreamController<String> navigateToController;
+  SplashPresenterSpy? presenter;
+  late StreamController<String?> navigateToController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = SplashPresenterSpy();
-    navigateToController = StreamController<String>();
-    when(presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
+    navigateToController = StreamController<String?>();
+    when(presenter!.navigateToStream)
+        .thenAnswer(((_) => navigateToController.stream as Stream<String>));
     await tester.pumpWidget(
       GetMaterialApp(
         initialRoute: '/',
@@ -44,7 +45,7 @@ void main() {
   testWidgets('Should call loadCurrentAccount on page load', (WidgetTester tester) async {
     await loadPage(tester);
 
-    verify(presenter.checkAccount()).called(1);
+    verify(presenter!.checkAccount()).called(1);
   });
 
   testWidgets('Should change page', (WidgetTester tester) async {

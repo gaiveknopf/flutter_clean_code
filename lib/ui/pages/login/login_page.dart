@@ -8,7 +8,7 @@ import '../../../../ui/components/components.dart';
 import '../../pages/pages.dart';
 
 class LoginPage extends StatelessWidget {
-  final LoginPresenter presenter;
+  final LoginPresenter? presenter;
 
   LoginPage(this.presenter);
 
@@ -24,7 +24,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: Builder(
         builder: (context) {
-          presenter.isLoadingStream.listen((isLoading) {
+          presenter!.isLoadingStream.listen((isLoading) {
             if (isLoading) {
               showDLoading(context);
             } else {
@@ -32,14 +32,14 @@ class LoginPage extends StatelessWidget {
             }
           });
 
-          presenter.mainErrorStream.listen((error) {
+          presenter!.mainErrorStream.listen((error) {
             if (error != null) {
               showErrorMessage(context, error.description);
             }
           });
 
-          presenter.navigateToStream.listen((page) {
-            if (page?.isNotEmpty == true) {
+          presenter!.navigateToStream.listen((page) {
+            if (page!.isNotEmpty == true) {
               Get.offAllNamed(page);
             }
           });

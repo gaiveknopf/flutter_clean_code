@@ -8,20 +8,20 @@ import 'package:flutter_app/validation/validators/validators.dart';
 class FieldValidationSpy extends Mock implements FieldValidation {}
 
 void main() {
-  ValidationComposite sut;
-  FieldValidationSpy validation1;
-  FieldValidationSpy validation2;
-  FieldValidationSpy validation3;
+  late ValidationComposite sut;
+  late FieldValidationSpy validation1;
+  late FieldValidationSpy validation2;
+  late FieldValidationSpy validation3;
 
-  void mockValidation1(ValidationError error) {
+  void mockValidation1(ValidationError? error) {
     when(validation1.validate(any)).thenReturn(error);
   }
 
-  void mockValidation2(ValidationError error) {
+  void mockValidation2(ValidationError? error) {
     when(validation2.validate(any)).thenReturn(error);
   }
 
-  void mockValidation3(ValidationError error) {
+  void mockValidation3(ValidationError? error) {
     when(validation3.validate(any)).thenReturn(error);
   }
 

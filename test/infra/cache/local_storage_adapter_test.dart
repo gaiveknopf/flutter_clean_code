@@ -1,20 +1,22 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:faker/faker.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'package:flutter_app/infra/cache/cache.dart';
 
-class FlutterSecureStorageSpy extends Mock implements FlutterSecureStorage {}
+import 'local_storage_adapter_test.mocks.dart';
 
+@GenerateMocks([FlutterSecureStorage])
 void main() {
-  LocalStorageAdapter sut;
-  FlutterSecureStorageSpy secureStorage;
-  String key;
-  String value;
+  late LocalStorageAdapter sut;
+  late MockFlutterSecureStorage secureStorage;
+  late String key;
+  late String value;
 
   setUp(() {
-    secureStorage = FlutterSecureStorageSpy();
+    secureStorage = MockFlutterSecureStorage();
     sut = LocalStorageAdapter(secureStorage: secureStorage);
     key = faker.lorem.word();
     value = faker.guid.guid();
@@ -42,8 +44,7 @@ void main() {
   });
 
   group('FetchSecure', () {
-    PostExpectation mockFetchSecureCall() =>
-        when(secureStorage.read(key: anyNamed('key')));
+    PostExpectation mockFetchSecureCall() => when(secureStorage.read(key: anyNamed('key')));
 
     void mockFetchSecureError() {
       mockFetchSecureCall().thenThrow(Exception());

@@ -27,12 +27,11 @@ class App extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: makeSplashPage, transition: Transition.fade),
-        GetPage(
-            name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
+        GetPage(name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
         GetPage(
           name: '/surveys',
           page: () => Scaffold(
-            body: Text('Enquetes'),
+            body: Text('MENU'),
           ),
           transition: Transition.fadeIn,
         ),

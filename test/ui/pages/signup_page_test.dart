@@ -11,37 +11,41 @@ import 'package:flutter_app/ui/pages/pages.dart';
 
 class SignUpPresenterSpy extends Mock implements SignUpPresenter {}
 
-SignUpPresenter presenter;
-StreamController<UIError> nameErrorController;
-StreamController<UIError> emailErrorController;
-StreamController<UIError> passwordErrorController;
-StreamController<UIError> passwordConfirmationErrorController;
-StreamController<UIError> mainErrorController;
-StreamController<String> navigateToController;
-StreamController<bool> isFormValidController;
-StreamController<bool> isLoadingController;
+SignUpPresenter? presenter;
+late StreamController<UIError?> nameErrorController;
+late StreamController<UIError?> emailErrorController;
+late StreamController<UIError?> passwordErrorController;
+late StreamController<UIError?> passwordConfirmationErrorController;
+late StreamController<UIError> mainErrorController;
+late StreamController<String?> navigateToController;
+late StreamController<bool> isFormValidController;
+late StreamController<bool> isLoadingController;
 
 void initStreams() {
-  nameErrorController = StreamController<UIError>();
-  emailErrorController = StreamController<UIError>();
-  passwordErrorController = StreamController<UIError>();
-  passwordConfirmationErrorController = StreamController<UIError>();
+  nameErrorController = StreamController<UIError?>();
+  emailErrorController = StreamController<UIError?>();
+  passwordErrorController = StreamController<UIError?>();
+  passwordConfirmationErrorController = StreamController<UIError?>();
   mainErrorController = StreamController<UIError>();
-  navigateToController = StreamController<String>();
+  navigateToController = StreamController<String?>();
   isFormValidController = StreamController<bool>();
   isLoadingController = StreamController<bool>();
 }
 
 void mockStreams() {
-  when(presenter.nameErrorStream).thenAnswer((_) => nameErrorController.stream);
-  when(presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
-  when(presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
-  when(presenter.passwordConfirmationErrorStream)
-      .thenAnswer((_) => passwordConfirmationErrorController.stream);
-  when(presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
-  when(presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
-  when(presenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
-  when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+  when(presenter!.nameErrorStream)
+      .thenAnswer(((_) => nameErrorController.stream as Stream<UIError>));
+  when(presenter!.emailErrorStream)
+      .thenAnswer(((_) => emailErrorController.stream as Stream<UIError>));
+  when(presenter!.passwordErrorStream)
+      .thenAnswer(((_) => passwordErrorController.stream as Stream<UIError>));
+  when(presenter!.passwordConfirmationErrorStream)
+      .thenAnswer(((_) => passwordConfirmationErrorController.stream as Stream<UIError>));
+  when(presenter!.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
+  when(presenter!.navigateToStream)
+      .thenAnswer(((_) => navigateToController.stream as Stream<String>));
+  when(presenter!.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
+  when(presenter!.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
 }
 
 void closeStreams() {
@@ -104,18 +108,18 @@ void main() {
 
     final name = faker.person.name();
     await tester.enterText(find.bySemanticsLabel('Nome'), name);
-    verify(presenter.validateName(name));
+    verify(presenter!.validateName(name));
 
     final email = faker.internet.email();
     await tester.enterText(find.bySemanticsLabel('Email'), email);
-    verify(presenter.validateEmail(email));
+    verify(presenter!.validateEmail(email));
 
     final password = faker.internet.password();
     await tester.enterText(find.bySemanticsLabel('Senha'), password);
-    verify(presenter.validatePassword(password));
+    verify(presenter!.validatePassword(password));
 
     await tester.enterText(find.bySemanticsLabel('Confirmar senha'), password);
-    verify(presenter.validatePasswordConfirmation(password));
+    verify(presenter!.validatePasswordConfirmation(password));
   });
 
   testWidgets('Should present email error', (WidgetTester tester) async {
@@ -217,7 +221,7 @@ void main() {
     await tester.tap(button);
     await tester.pump();
 
-    verify(presenter.signUp()).called(1);
+    verify(presenter!.signUp()).called(1);
   });
 
   testWidgets('Should present loading', (WidgetTester tester) async {

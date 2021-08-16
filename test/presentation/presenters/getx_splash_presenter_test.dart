@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -7,16 +8,16 @@ import 'package:flutter_app/domain/usecases/usecases.dart';
 
 import 'package:flutter_app/presentation/presenters/presenters.dart';
 
-class LoadCurrentAccountSpy extends Mock implements LoadCurrentAccount {}
+import 'getx_splash_presenter_test.mocks.dart';
 
+@GenerateMocks([LoadCurrentAccount])
 void main() {
-  GetxSplashPresenter sut;
-  LoadCurrentAccountSpy loadCurrentAccount;
+  late GetxSplashPresenter sut;
+  late MockLoadCurrentAccount loadCurrentAccount;
 
-  PostExpectation mockLoadCurrentAccountCall() =>
-      when(loadCurrentAccount.load());
+  PostExpectation mockLoadCurrentAccountCall() => when(loadCurrentAccount.load());
 
-  void mockLoadCurrentAccount({AccountEntity account}) {
+  void mockLoadCurrentAccount({AccountEntity? account}) {
     mockLoadCurrentAccountCall().thenAnswer((_) async => account);
   }
 
@@ -25,7 +26,7 @@ void main() {
   }
 
   setUp(() {
-    loadCurrentAccount = LoadCurrentAccountSpy();
+    loadCurrentAccount = MockLoadCurrentAccount();
     sut = GetxSplashPresenter(loadCurrentAccount: loadCurrentAccount);
     mockLoadCurrentAccount(account: AccountEntity(faker.guid.guid()));
   });
@@ -37,8 +38,7 @@ void main() {
   });
 
   test('Should go to surveys page on success', () async {
-    sut.navigateToStream
-        .listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.checkAccount(durationInSeconds: 0);
   });

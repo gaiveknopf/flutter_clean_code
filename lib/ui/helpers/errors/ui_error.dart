@@ -8,7 +8,7 @@ enum UIError {
   emailInUse,
 }
 
-extension UIErrorExtension on UIError {
+extension UIErrorExtension on UIError? {
   String get description {
     switch (this) {
       case UIError.requiredField:

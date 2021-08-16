@@ -4,26 +4,27 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  get:
-  http:
-  provider:
-  equatable:
-  flutter_secure_storage:
+  get: ^4.3.8
+  http: ^0.13.3
+  provider: ^5.0.0
+  equatable: ^2.0.3
+  flutter_secure_storage: ^4.2.1
 
   cupertino_icons: ^1.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: 
-  test: 
-  mockito: 
+  flutter_launcher_icons: ^0.9.1 
+  test: ^1.16.8 
+  mockito: ^5.0.14 
   faker: ^2.0.0
+  build_runner:
 
 flutter:
   uses-material-design: true

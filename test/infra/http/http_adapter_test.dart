@@ -1,5 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -7,15 +8,16 @@ import 'package:flutter_app/data/http/http.dart';
 
 import 'package:flutter_app/infra/http/http.dart';
 
-class ClientSpy extends Mock implements Client {}
+import 'http_adapter_test.mocks.dart';
 
+@GenerateMocks([Client])
 void main() {
-  HttpAdapter sut;
-  ClientSpy client;
-  String url;
+  late HttpAdapter sut;
+  MockClient? client;
+  String? url;
 
   setUp(() {
-    client = ClientSpy();
+    client = MockClient();
     sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
   });
@@ -29,8 +31,8 @@ void main() {
   });
 
   group('POST', () {
-    PostExpectation mockRequest() => when(
-        client.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
+    PostExpectation mockRequest() =>
+        when(client!.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
 
     void mockResponse(int statusCode, {body: '{"any_key":"any_value"}'}) {
       mockRequest().thenAnswer((_) async => Response(body, statusCode));
@@ -45,11 +47,10 @@ void main() {
     });
 
     test('Should call post with correct values', () async {
-      await sut
-          .request(url: url, method: 'post', body: {'any_key': 'any_value'});
+      await sut.request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
-      verify(client.post(
-        Uri.parse(url),
+      verify(client!.post(
+        Uri.parse(url!),
         headers: {
           'Content-Type': 'application/json',
           'accept': 'application/json',
@@ -61,7 +62,7 @@ void main() {
     test('Should call post without body', () async {
       await sut.request(url: url, method: 'post');
 
-      verify(client.post(
+      verify(client!.post(
         any,
         headers: anyNamed('headers'),
       ));

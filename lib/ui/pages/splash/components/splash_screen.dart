@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'constant.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<Color> _colorAnimation;
-  Animation<double> _nameAnimation;
-  Animation<double> _quoteAnimation;
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
+  late Animation<double> _nameAnimation;
+  late Animation<double> _quoteAnimation;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             ),
             child: AnimatedBuilder(
               animation: _colorAnimation,
-              builder: (BuildContext context, Widget child) {
+              builder: (BuildContext context, Widget? child) {
                 return Container(
                   color: _colorAnimation.value,
                 );

@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -8,18 +9,22 @@ import 'package:flutter_app/domain/helpers/helpers.dart';
 import 'package:flutter_app/data/http/http.dart';
 import 'package:flutter_app/data/usecases/usecases.dart';
 
-class HttpClientSpy extends Mock implements HttpClient {}
+import 'remote_add_account_test.mocks.dart';
 
+@GenerateMocks([HttpClient])
 void main() {
-  RemoteAddAccount sut;
-  HttpClientSpy httpClient;
-  String url;
-  AddAccountParams params;
+  late RemoteAddAccount sut;
+  late MockHttpClient httpClient;
+  late String url;
+  late AddAccountParams params;
 
   Map mockValidData() => {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
 
-  PostExpectation mockRequest() => when(
-      httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body')));
+  PostExpectation mockRequest() => when(httpClient.request(
+        url: anyNamed('url'),
+        method: anyNamed('method'),
+        body: anyNamed('body'),
+      ));
 
   void mockHttpData(Map data) {
     mockRequest().thenAnswer((_) async => data);
@@ -30,7 +35,7 @@ void main() {
   }
 
   setUp(() {
-    httpClient = HttpClientSpy();
+    httpClient = MockHttpClient();
     url = faker.internet.httpUrl();
     sut = RemoteAddAccount(httpClient: httpClient, url: url);
     params = AddAccountParams(

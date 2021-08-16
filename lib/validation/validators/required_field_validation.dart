@@ -5,13 +5,13 @@ import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
 
 class RequiredFieldValidation extends Equatable implements FieldValidation {
-  final String field;
+  final String? field;
 
   List get props => [field];
 
   RequiredFieldValidation(this.field);
 
-  ValidationError validate(String value) {
+  ValidationError? validate(String? value) {
     return value?.isNotEmpty == true ? null : ValidationError.requiredField;
   }
 }

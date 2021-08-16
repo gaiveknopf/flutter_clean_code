@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:flutter_app/ui/pages/splash/components/splash_screen.dart';
 import 'package:flutter_app/ui/pages/pages.dart';
 
 class SplashPresenterSpy extends Mock implements SplashPresenter {}
@@ -15,8 +16,7 @@ void main() {
   Future<void> loadPage(WidgetTester tester) async {
     presenter = SplashPresenterSpy();
     navigateToController = StreamController<String>();
-    when(presenter.navigateToStream)
-        .thenAnswer((_) => navigateToController.stream);
+    when(presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
     await tester.pumpWidget(
       GetMaterialApp(
         initialRoute: '/',
@@ -36,14 +36,12 @@ void main() {
     navigateToController.close();
   });
 
-  testWidgets('Should present spinner on page load',
-      (WidgetTester tester) async {
+  testWidgets('Should present splash screen animation on page load', (WidgetTester tester) async {
     await loadPage(tester);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(SplashScreen), findsOneWidget);
   });
 
-  testWidgets('Should call loadCurrentAccount on page load',
-      (WidgetTester tester) async {
+  testWidgets('Should call loadCurrentAccount on page load', (WidgetTester tester) async {
     await loadPage(tester);
 
     verify(presenter.checkAccount()).called(1);

@@ -13,11 +13,12 @@ class SurveysPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    presenter.loadData();
     return Scaffold(
       appBar: AppBar(title: Text(R.strings.surveys)),
       body: Builder(
         builder: (context) {
+          presenter.loadData();
+
           presenter.isLoadingStream.listen((isLoading) {
             if (isLoading == true) {
               showLoading(context);

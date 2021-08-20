@@ -5,12 +5,15 @@ ThemeData makeAppTheme() {
   final primaryColorDark = Color.fromRGBO(96, 0, 39, 1);
   final primaryColorLight = Color.fromRGBO(188, 71, 123, 1);
 
+  final secondaryColorDark = Color.fromRGBO(0, 37, 26, 1);
+
   return ThemeData(
     colorScheme: ThemeData().colorScheme.copyWith(primary: primaryColor),
     primaryColor: primaryColor,
     primaryColorDark: primaryColorDark,
     primaryColorLight: primaryColorLight,
     accentColor: primaryColor,
+    secondaryHeaderColor: secondaryColorDark,
     backgroundColor: Colors.white,
     textTheme: TextTheme(
       headline1: TextStyle(

@@ -75,30 +75,6 @@ void main() {
     closeStreams();
   });
 
-  testWidgets('Should load with correct initial state', (WidgetTester tester) async {
-    await loadPage(tester);
-
-    final nameTextChildren =
-        find.descendant(of: find.bySemanticsLabel('Nome'), matching: find.byType(Text));
-    expect(nameTextChildren, findsOneWidget);
-
-    final emailTextChildren =
-        find.descendant(of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
-    expect(emailTextChildren, findsOneWidget);
-
-    final passwordTextChildren =
-        find.descendant(of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
-    expect(passwordTextChildren, findsOneWidget);
-
-    final passwordConfirmationTextChildren =
-        find.descendant(of: find.bySemanticsLabel('Confirmar senha'), matching: find.byType(Text));
-    expect(passwordConfirmationTextChildren, findsOneWidget);
-
-    final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
-    expect(button.onPressed, null);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-  });
-
   testWidgets('Should call Validate with correct values', (WidgetTester tester) async {
     await loadPage(tester);
 
@@ -278,5 +254,16 @@ void main() {
     navigateToController.add(null);
     await tester.pump();
     expect(Get.currentRoute, '/signup');
+  });
+
+  testWidgets('Should call goToLogin on link click', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    final button = find.text('Login');
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await tester.pump();
+
+    verify(presenter.goToLogin()).called(1);
   });
 }

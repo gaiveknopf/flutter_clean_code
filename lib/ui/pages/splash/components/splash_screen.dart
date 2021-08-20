@@ -65,12 +65,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/ui/assets/images/splash.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
             child: AnimatedBuilder(
               animation: _colorAnimation,
               builder: (BuildContext context, Widget child) {

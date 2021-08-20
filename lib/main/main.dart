@@ -1,13 +1,12 @@
+import 'package:flutter_app/main/factories/pages/surveys/surveys.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/main/factories/pages/pages.dart';
+import 'package:get/get.dart';
 
-import 'package:flutter_app/ui/components/components.dart';
+import '../main/factories/pages/pages.dart';
 
-import 'package:get/route_manager.dart';
-
-import 'package:flutter_app/main/factories/pages/login/login_page_factory.dart';
-import 'package:provider/provider.dart';
+import '../ui/components/components.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -27,15 +26,9 @@ class App extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: makeSplashPage, transition: Transition.fade),
-        GetPage(
-            name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
-        GetPage(
-          name: '/surveys',
-          page: () => Scaffold(
-            body: Text('Enquetes'),
-          ),
-          transition: Transition.fadeIn,
-        ),
+        GetPage(name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
+        GetPage(name: '/signup', page: makeSignUpPage),
+        GetPage(name: '/surveys', page: makeSurveysPage, transition: Transition.fadeIn),
       ],
     );
   }

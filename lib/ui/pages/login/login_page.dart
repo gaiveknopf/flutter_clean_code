@@ -26,7 +26,7 @@ class LoginPage extends StatelessWidget {
         builder: (context) {
           presenter.isLoadingStream.listen((isLoading) {
             if (isLoading) {
-              showDLoading(context);
+              showLoading(context);
             } else {
               hideLoading(context);
             }
@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
                               child: LoginButton(),
                             ),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: presenter.goToSignUp,
                               icon: Icon(Icons.person),
                               label: Text(R.strings.addAccount),
                             )

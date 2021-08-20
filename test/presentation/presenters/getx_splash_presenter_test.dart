@@ -13,8 +13,7 @@ void main() {
   GetxSplashPresenter sut;
   LoadCurrentAccountSpy loadCurrentAccount;
 
-  PostExpectation mockLoadCurrentAccountCall() =>
-      when(loadCurrentAccount.load());
+  PostExpectation mockLoadCurrentAccountCall() => when(loadCurrentAccount.load());
 
   void mockLoadCurrentAccount({AccountEntity account}) {
     mockLoadCurrentAccountCall().thenAnswer((_) async => account);
@@ -27,7 +26,7 @@ void main() {
   setUp(() {
     loadCurrentAccount = LoadCurrentAccountSpy();
     sut = GetxSplashPresenter(loadCurrentAccount: loadCurrentAccount);
-    mockLoadCurrentAccount(account: AccountEntity(faker.guid.guid()));
+    mockLoadCurrentAccount(account: AccountEntity(token: faker.guid.guid()));
   });
 
   test('Should call LoadCurrentAccount', () async {
@@ -37,14 +36,21 @@ void main() {
   });
 
   test('Should go to surveys page on success', () async {
-    sut.navigateToStream
-        .listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.checkAccount(durationInSeconds: 0);
   });
 
   test('Should go to login page on null result', () async {
     mockLoadCurrentAccount(account: null);
+
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
+
+    await sut.checkAccount(durationInSeconds: 0);
+  });
+
+  test('Should go to login page on null token', () async {
+    mockLoadCurrentAccount(account: AccountEntity(token: null));
 
     sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
 

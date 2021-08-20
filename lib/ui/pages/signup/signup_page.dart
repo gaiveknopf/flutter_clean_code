@@ -26,7 +26,7 @@ class SignUpPage extends StatelessWidget {
         builder: (context) {
           presenter.isLoadingStream.listen((isLoading) {
             if (isLoading) {
-              showDLoading(context);
+              showLoading(context);
             } else {
               hideLoading(context);
             }
@@ -77,7 +77,7 @@ class SignUpPage extends StatelessWidget {
                               child: SignUpButton(),
                             ),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: presenter.goToLogin,
                               icon: Icon(Icons.logout),
                               label: Text(R.strings.login),
                             )

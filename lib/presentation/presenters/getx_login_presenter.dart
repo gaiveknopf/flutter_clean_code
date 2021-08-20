@@ -17,12 +17,13 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   String _email;
   String _password;
-  var _emailError = Rx<UIError>(null);
-  var _passwordError = Rx<UIError>(null);
-  var _mainError = Rx<UIError>(null);
-  var _navigateTo = RxString(null);
-  var _isFormValid = false.obs;
-  var _isLoading = false.obs;
+
+  final _emailError = Rx<UIError>(null);
+  final _passwordError = Rx<UIError>(null);
+  final _mainError = Rx<UIError>(null);
+  final _navigateTo = RxString(null);
+  final _isFormValid = false.obs;
+  final _isLoading = false.obs;
 
   Stream<UIError> get emailErrorStream => _emailError.stream;
   Stream<UIError> get passwordErrorStream => _passwordError.stream;
@@ -39,18 +40,23 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   void validateEmail(String email) {
     _email = email;
-    _emailError.value = _validateField(field: 'email', value: email);
+    _emailError.value = _validateField('email');
     _validateForm();
   }
 
   void validatePassword(String password) {
     _password = password;
-    _passwordError.value = _validateField(field: 'password', value: password);
+    _passwordError.value = _validateField('password');
     _validateForm();
   }
 
-  UIError _validateField({String field, String value}) {
-    final error = validation.validate(field: field, value: value);
+  UIError _validateField(String field) {
+    final formData = {
+      'email': _email,
+      'password': _password,
+    };
+
+    final error = validation.validate(field: field, input: formData);
     switch (error) {
       case ValidationError.invalidField:
         return UIError.invalidField;
@@ -70,6 +76,7 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   Future<void> auth() async {
     try {
+      _mainError.value = null;
       _isLoading.value = true;
       final account =
           await authentication.auth(AuthenticationParams(email: _email, password: _password));
@@ -85,5 +92,9 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
       }
       _isLoading.value = false;
     }
+  }
+
+  void goToSignUp() {
+    _navigateTo.value = '/signup';
   }
 }

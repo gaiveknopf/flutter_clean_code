@@ -573,7 +573,7 @@
                 <mxCell id="ziNI6dVB32Jdnrq6ipWI-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;strokeColor=#006666;strokeWidth=2;" parent="md32G33ztIHuvuV38JR1-1" source="ziNI6dVB32Jdnrq6ipWI-6" target="UPb-mNBo9jcgWKMl7kHA-1" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ziNI6dVB32Jdnrq6ipWI-6" value="LocalStorageAdapter" style="rounded=0;whiteSpace=wrap;html=1;shadow=0;strokeWidth=2;fillColor=#FFFFFF;fontFamily=Verdana;fontSize=16;align=center;strokeColor=#006666;sketch=0;" parent="md32G33ztIHuvuV38JR1-1" vertex="1">
+                <mxCell id="ziNI6dVB32Jdnrq6ipWI-6" value="SecureStorageAdapter" style="rounded=0;whiteSpace=wrap;html=1;shadow=0;strokeWidth=2;fillColor=#FFFFFF;fontFamily=Verdana;fontSize=16;align=center;strokeColor=#006666;sketch=0;" parent="md32G33ztIHuvuV38JR1-1" vertex="1">
                     <mxGeometry x="195.75" y="-498.5" width="206.5" height="68" as="geometry"/>
                 </mxCell>
                 <mxCell id="ziNI6dVB32Jdnrq6ipWI-7" value="LocalStorage" style="rounded=0;whiteSpace=wrap;html=1;shadow=0;strokeWidth=2;fontFamily=Verdana;fontSize=16;align=center;fillColor=#E6E6E6;sketch=0;" parent="md32G33ztIHuvuV38JR1-1" vertex="1">
@@ -763,7 +763,7 @@
                 <mxCell id="Vq70LIVFXOCtgn28LvvG-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;strokeColor=#006666;strokeWidth=2;" parent="Vq70LIVFXOCtgn28LvvG-1" source="Vq70LIVFXOCtgn28LvvG-29" target="Vq70LIVFXOCtgn28LvvG-19" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="Vq70LIVFXOCtgn28LvvG-29" value="LocalStorageAdapter" style="rounded=0;whiteSpace=wrap;html=1;shadow=0;strokeWidth=2;fillColor=#FFFFFF;fontFamily=Verdana;fontSize=16;align=center;strokeColor=#006666;sketch=0;" parent="Vq70LIVFXOCtgn28LvvG-1" vertex="1">
+                <mxCell id="Vq70LIVFXOCtgn28LvvG-29" value="SecureStorageAdapter" style="rounded=0;whiteSpace=wrap;html=1;shadow=0;strokeWidth=2;fillColor=#FFFFFF;fontFamily=Verdana;fontSize=16;align=center;strokeColor=#006666;sketch=0;" parent="Vq70LIVFXOCtgn28LvvG-1" vertex="1">
                     <mxGeometry x="195.75" y="-498.5" width="206.5" height="68" as="geometry"/>
                 </mxCell>
                 <mxCell id="Vq70LIVFXOCtgn28LvvG-30" value="LocalStorage" style="rounded=0;whiteSpace=wrap;html=1;shadow=0;strokeWidth=2;fontFamily=Verdana;fontSize=16;align=center;fillColor=#E6E6E6;sketch=0;" parent="Vq70LIVFXOCtgn28LvvG-1" vertex="1">

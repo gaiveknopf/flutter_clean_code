@@ -197,4 +197,65 @@ void main() {
       verify(cacheStorage.delete('surveys')).called(1);
     });
   });
+
+  group('save', () {
+    CacheStorageSpy cacheStorage;
+    LocalLoadSurveys sut;
+    List<SurveyEntity> surveys;
+
+    PostExpectation mockSaveCall() =>
+        when(cacheStorage.save(key: anyNamed('key'), value: anyNamed('value')));
+
+    void mockSaveError() => mockSaveCall().thenThrow(Exception());
+
+    List<SurveyEntity> mockSurveys() => [
+          SurveyEntity(
+            id: faker.guid.guid(),
+            question: faker.randomGenerator.string(10),
+            dateTime: DateTime.utc(2021, 7, 21),
+            didAnswer: true,
+          ),
+          SurveyEntity(
+            id: faker.guid.guid(),
+            question: faker.randomGenerator.string(10),
+            dateTime: DateTime.utc(2021, 7, 22),
+            didAnswer: false,
+          ),
+        ];
+
+    setUp(() {
+      cacheStorage = CacheStorageSpy();
+      sut = LocalLoadSurveys(cacheStorage: cacheStorage);
+      surveys = mockSurveys();
+    });
+
+    test('Should call cacheStorage with correct values', () async {
+      final list = [
+        {
+          'id': surveys[0].id,
+          'question': surveys[0].question,
+          'date': '2021-07-21T00:00:00.000Z',
+          'didAnswer': 'true',
+        },
+        {
+          'id': surveys[1].id,
+          'question': surveys[1].question,
+          'date': '2021-07-22T00:00:00.000Z',
+          'didAnswer': 'false',
+        },
+      ];
+
+      await sut.save(surveys);
+
+      verify(cacheStorage.save(key: 'surveys', value: list)).called(1);
+    });
+
+    test('Should throw unexpectedError if save throws', () async {
+      mockSaveError();
+
+      final future = sut.save(surveys);
+
+      expect(future, throwsA(DomainError.unexpected));
+    });
+  });
 }

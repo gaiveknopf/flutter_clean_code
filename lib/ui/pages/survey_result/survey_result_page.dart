@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../pages/survey_result/components/components.dart';
+import '../../components/components.dart';
+import '../../pages/pages.dart';
+
 import '../../helpers/helpers.dart';
 
 class SurveyResultPage extends StatelessWidget {
+  final SurveyResultPresenter presenter;
+
+  SurveyResultPage(this.presenter);
+
   final storage = new FlutterSecureStorage();
 
   @override
@@ -22,65 +30,31 @@ class SurveyResultPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return Container(
-              padding: EdgeInsets.only(top: 40, bottom: 20, left: 20, right: 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).disabledColor.withAlpha(90),
-              ),
-              child: Text('Qual é seu framework web favorito?'),
-            );
-          }
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).backgroundColor,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.network(
-                      'http://fordevs.herokuapp.com/static/img/logo-react.png',
-                      width: 40,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          'React',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '100%',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[900],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Theme.of(context).highlightColor,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Divider(
-                height: 1,
-              )
-            ],
+      body: Builder(
+        builder: (context) {
+          presenter.isLoadingStream.listen((isLoading) {
+            if (isLoading == true) {
+              showLoading(context);
+            } else {
+              hideLoading(context);
+            }
+          });
+
+          presenter.loadData();
+
+          return StreamBuilder<dynamic>(
+            stream: presenter.surveyResultStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return ReloadScreen(error: snapshot.error, reload: presenter.loadData);
+              }
+              if (snapshot.hasData) {
+                return SurveyResult();
+              }
+              return SizedBox(height: 0);
+            },
           );
         },
-        itemCount: 4,
       ),
     );
   }

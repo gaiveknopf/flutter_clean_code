@@ -1,11 +1,10 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
-import 'components/components.dart';
-import 'surveys.dart';
+import './components/components.dart';
+import './surveys.dart';
 
 class SurveysPage extends StatelessWidget {
   final SurveysPresenter presenter;
@@ -24,7 +23,6 @@ class SurveysPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Show Snackbar',
             onPressed: () async {
               await storage.deleteAll();
             },
@@ -50,20 +48,9 @@ class SurveysPage extends StatelessWidget {
                 stream: presenter.mainErrorStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          snapshot.data,
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: presenter.loadData,
-                          child: Text(R.strings.reload),
-                        )
-                      ],
+                    return ReloadScreen(
+                      error: snapshot.data,
+                      reload: presenter.loadData,
                     );
                   }
                   return SizedBox(height: 0);
@@ -73,17 +60,7 @@ class SurveysPage extends StatelessWidget {
                   stream: presenter.surveysStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: CarouselSlider(
-                          options: CarouselOptions(enlargeCenterPage: true, aspectRatio: 1),
-                          items: snapshot.data
-                              .map(
-                                (viewModel) => SurveyItem(viewModel),
-                              )
-                              .toList(),
-                        ),
-                      );
+                      return SurveyItems(snapshot.data);
                     }
                     return SizedBox(height: 0);
                   }),

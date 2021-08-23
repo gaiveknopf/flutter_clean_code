@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
@@ -11,10 +12,25 @@ class SurveysPage extends StatelessWidget {
 
   SurveysPage(this.presenter);
 
+  final storage = new FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(R.strings.surveys)),
+      appBar: AppBar(
+        title: Text(
+          R.strings.surveys,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Show Snackbar',
+            onPressed: () async {
+              await storage.deleteAll();
+            },
+          ),
+        ],
+      ),
       body: Builder(
         builder: (context) {
           presenter.loadData();

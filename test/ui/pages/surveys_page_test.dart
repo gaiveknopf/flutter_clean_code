@@ -15,23 +15,27 @@ void main() {
   StreamController<bool> isLoadingController;
   StreamController<List<SurveyViewModel>> surveysController;
   StreamController<String> mainErrorController;
+  StreamController<String> navigateToController;
 
   void initStreams() {
     isLoadingController = StreamController<bool>();
     surveysController = StreamController<List<SurveyViewModel>>();
     mainErrorController = StreamController<String>();
+    navigateToController = StreamController<String>();
   }
 
   void mockStreams() {
     when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
     when(presenter.surveysStream).thenAnswer((_) => surveysController.stream);
     when(presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
+    when(presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
   }
 
   void closeStreams() {
     isLoadingController.close();
     surveysController.close();
     mainErrorController.close();
+    navigateToController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -41,10 +45,8 @@ void main() {
     final surveysPage = GetMaterialApp(
       initialRoute: '/surveys',
       getPages: [
-        GetPage(
-          name: '/surveys',
-          page: () => SurveysPage(presenter),
-        )
+        GetPage(name: '/surveys', page: () => SurveysPage(presenter)),
+        GetPage(name: '/any_route', page: () => Scaffold(body: Text('fake page'))),
       ],
     );
     await tester.pumpWidget(surveysPage);
@@ -113,5 +115,38 @@ void main() {
     await tester.tap(find.text('Recarregar'));
 
     verify(presenter.loadData()).called(2);
+  });
+
+  testWidgets('Should call LoadSurveys on reload button click', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    // surveysController.addError(UIError.unexpected.description);
+    mainErrorController.add(UIError.unexpected.description);
+    await tester.pump();
+    await tester.tap(find.text('Recarregar'));
+
+    verify(presenter.loadData()).called(2);
+  });
+
+  testWidgets('Should call goToSurveyResult on survey click', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    surveysController.add(makeSurveys());
+    await tester.pump();
+
+    await tester.tap(find.text('Question 1'));
+    await tester.pump();
+
+    verify(presenter.goToSurveyResult('1')).called(1);
+  });
+
+  testWidgets('Should change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('/any_route');
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/any_route');
+    expect(find.text('fake page'), findsOneWidget);
   });
 }

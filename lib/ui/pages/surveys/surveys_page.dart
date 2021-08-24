@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
@@ -41,6 +43,12 @@ class SurveysPage extends StatelessWidget {
             }
           });
 
+          presenter.navigateToStream.listen((page) {
+            if (page?.isNotEmpty == true) {
+              Get.toNamed(page);
+            }
+          });
+
           return Container(
               child: ListView(
             children: [
@@ -60,7 +68,10 @@ class SurveysPage extends StatelessWidget {
                   stream: presenter.surveysStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return SurveyItems(snapshot.data);
+                      return Provider(
+                        create: (_) => presenter,
+                        child: SurveyItems(snapshot.data),
+                      );
                     }
                     return SizedBox(height: 0);
                   }),

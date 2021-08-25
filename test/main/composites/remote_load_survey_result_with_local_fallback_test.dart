@@ -1,24 +1,13 @@
 import 'package:faker/faker.dart';
-import 'package:meta/meta.dart';
+
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'package:flutter_app/domain/entities/entities.dart';
-import 'package:flutter_app/domain/usecases/usecases.dart';
+import 'package:flutter_app/domain/helpers/helpers.dart';
 import 'package:flutter_app/data/usecases/usecases.dart';
 
-class RemoteLoadSurveyResultWithLocalFallback implements LoadSurveyResult {
-  final RemoteLoadSurveyResult remote;
-  final LocalLoadSurveyResult local;
-
-  RemoteLoadSurveyResultWithLocalFallback({@required this.remote, @required this.local});
-
-  Future<SurveyResultEntity> loadBySurvey({String surveyId}) async {
-    final surveyResult = await remote.loadBySurvey(surveyId: surveyId);
-    await local.save(surveyId: surveyId, surveyResult: surveyResult);
-    return surveyResult;
-  }
-}
+import 'package:flutter_app/main/composites/composites.dart';
 
 class RemoteLoadSurveyResultSpy extends Mock implements RemoteLoadSurveyResult {}
 
@@ -29,22 +18,38 @@ void main() {
   RemoteLoadSurveyResultSpy remote;
   LocalLoadSurveyResultSpy local;
   String surveyId;
-  SurveyResultEntity surveyResult;
+  SurveyResultEntity remoteResult;
+  SurveyResultEntity localResult;
 
-  void mockSurveyResult() {
-    surveyResult = SurveyResultEntity(
-      surveyId: faker.guid.guid(),
-      question: faker.lorem.sentence(),
-      answers: [
-        SurveyAnswerEntity(
-          answer: faker.lorem.sentence(),
-          isCurrentAnswer: faker.randomGenerator.boolean(),
-          percent: faker.randomGenerator.integer(100),
-        )
-      ],
-    );
-    when(remote.loadBySurvey(surveyId: anyNamed('surveyId'))).thenAnswer((_) async => surveyResult);
+  SurveyResultEntity mockSurveyResult() => SurveyResultEntity(
+        surveyId: faker.guid.guid(),
+        question: faker.lorem.sentence(),
+        answers: [
+          SurveyAnswerEntity(
+            answer: faker.lorem.sentence(),
+            isCurrentAnswer: faker.randomGenerator.boolean(),
+            percent: faker.randomGenerator.integer(100),
+          )
+        ],
+      );
+
+  PostExpectation mockRemoteLoadCall() => when(remote.loadBySurvey(surveyId: anyNamed('surveyId')));
+
+  void mockRemoteLoad() {
+    remoteResult = mockSurveyResult();
+    mockRemoteLoadCall().thenAnswer((_) async => remoteResult);
   }
+
+  void mockRemoteLoadError(DomainError error) => mockRemoteLoadCall().thenThrow(error);
+
+  PostExpectation mockLocalLoadCall() => when(local.loadBySurvey(surveyId: anyNamed('surveyId')));
+
+  void mockLocalLoad() {
+    localResult = mockSurveyResult();
+    mockLocalLoadCall().thenAnswer((_) async => localResult);
+  }
+
+  void mockLocalLoadError() => mockLocalLoadCall().thenThrow(DomainError.unexpected);
 
   setUp(() {
     surveyId = faker.guid.guid();
@@ -52,7 +57,8 @@ void main() {
     local = LocalLoadSurveyResultSpy();
     sut = RemoteLoadSurveyResultWithLocalFallback(remote: remote, local: local);
 
-    mockSurveyResult();
+    mockRemoteLoad();
+    mockLocalLoad();
   });
   test('Should call remote loadBySurvey', () async {
     await sut.loadBySurvey(surveyId: surveyId);
@@ -62,13 +68,47 @@ void main() {
 
   test('Should call local save with remote data', () async {
     await sut.loadBySurvey(surveyId: surveyId);
-    print(surveyResult);
-    verify(local.save(surveyId: surveyId, surveyResult: surveyResult)).called(1);
+    print(remoteResult);
+    verify(local.save(surveyId: surveyId, surveyResult: remoteResult)).called(1);
   });
 
   test('Should return remote data', () async {
     final response = await sut.loadBySurvey(surveyId: surveyId);
 
-    expect(response, surveyResult);
+    expect(response, remoteResult);
+  });
+
+  test('Should rethrow if remote LoadBySurvey throws AccessDeniedError', () async {
+    mockRemoteLoadError(DomainError.accessDenied);
+
+    final future = sut.loadBySurvey(surveyId: surveyId);
+
+    expect(future, throwsA(DomainError.accessDenied));
+  });
+
+  test('Should call local LoadBySurvey on remote error', () async {
+    mockRemoteLoadError(DomainError.unexpected);
+
+    await sut.loadBySurvey(surveyId: surveyId);
+
+    verify(local.validate(surveyId)).called(1);
+    verify(local.loadBySurvey(surveyId: surveyId)).called(1);
+  });
+
+  test('Should return local data', () async {
+    mockRemoteLoadError(DomainError.unexpected);
+
+    final response = await sut.loadBySurvey(surveyId: surveyId);
+
+    expect(response, localResult);
+  });
+
+  test('Should throw UnexpectedError if local load fails', () async {
+    mockRemoteLoadError(DomainError.unexpected);
+    mockLocalLoadError();
+
+    final future = sut.loadBySurvey(surveyId: surveyId);
+
+    expect(future, throwsA(DomainError.unexpected));
   });
 }

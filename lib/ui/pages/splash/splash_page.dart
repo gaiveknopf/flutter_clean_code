@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/pages/splash/components/splash_screen.dart';
-import 'package:get/get.dart';
 
+import '../../mixins/mixins.dart';
 import './splash_presenter.dart';
 
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatelessWidget with NavegationManager {
   final SplashPresenter presenter;
 
   SplashPage({@required this.presenter});
@@ -14,11 +14,7 @@ class SplashPage extends StatelessWidget {
     presenter.checkAccount();
     return Scaffold(
       body: Builder(builder: (context) {
-        presenter.navigateToStream.listen((page) {
-          if (page?.isNotEmpty == true) {
-            Get.offAllNamed(page);
-          }
-        });
+        handleNavigation(presenter.navigateToStream, clear: true);
         return SplashScreen();
       }),
     );

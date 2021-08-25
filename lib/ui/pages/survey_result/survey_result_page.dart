@@ -3,11 +3,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../pages/survey_result/components/components.dart';
 import '../../components/components.dart';
+import '../../helpers/helpers.dart';
+import '../../mixins/mixins.dart';
 import '../../pages/pages.dart';
 
-import '../../helpers/helpers.dart';
-
-class SurveyResultPage extends StatelessWidget {
+class SurveyResultPage extends StatelessWidget with LoadingManager, SessionManager {
   final SurveyResultPresenter presenter;
 
   SurveyResultPage(this.presenter);
@@ -32,15 +32,10 @@ class SurveyResultPage extends StatelessWidget {
       ),
       body: Builder(
         builder: (context) {
-          presenter.isLoadingStream.listen((isLoading) {
-            if (isLoading == true) {
-              showLoading(context);
-            } else {
-              hideLoading(context);
-            }
-          });
-
           presenter.loadData();
+
+          handleLoading(context, presenter.isLoadingStream);
+          handleSessionExpired(presenter.isSessionExpiredStream);
 
           return StreamBuilder<SurveyResultViewModel>(
             stream: presenter.surveyResultStream,

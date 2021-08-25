@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import './components/components.dart';
+
+import '../../mixins/mixins.dart';
 import './surveys.dart';
 
-class SurveysPage extends StatelessWidget {
+class SurveysPage extends StatelessWidget with LoadingManager, NavegationManager, SessionManager {
   final SurveysPresenter presenter;
 
   SurveysPage(this.presenter);
@@ -35,48 +36,27 @@ class SurveysPage extends StatelessWidget {
         builder: (context) {
           presenter.loadData();
 
-          presenter.isLoadingStream.listen((isLoading) {
-            if (isLoading == true) {
-              showLoading(context);
-            } else {
-              hideLoading(context);
-            }
-          });
+          handleLoading(context, presenter.isLoadingStream);
+          handleSessionExpired(presenter.isSessionExpiredStream);
+          handleNavigation(presenter.navigateToStream);
 
-          presenter.navigateToStream.listen((page) {
-            if (page?.isNotEmpty == true) {
-              Get.toNamed(page);
-            }
-          });
-
-          return Container(
-              child: ListView(
-            children: [
-              StreamBuilder(
-                stream: presenter.mainErrorStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ReloadScreen(
-                      error: snapshot.data,
-                      reload: presenter.loadData,
-                    );
-                  }
-                  return SizedBox(height: 0);
-                },
-              ),
-              StreamBuilder<List<SurveyViewModel>>(
-                  stream: presenter.surveysStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Provider(
-                        create: (_) => presenter,
-                        child: SurveyItems(snapshot.data),
-                      );
-                    }
-                    return SizedBox(height: 0);
-                  }),
-            ],
-          ));
+          return StreamBuilder<List<SurveyViewModel>>(
+              stream: presenter.surveysStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return ReloadScreen(
+                    error: snapshot.error,
+                    reload: presenter.loadData,
+                  );
+                }
+                if (snapshot.hasData) {
+                  return Provider(
+                    create: (_) => presenter,
+                    child: SurveyItems(snapshot.data),
+                  );
+                }
+                return SizedBox(height: 0);
+              });
         },
       ),
     );

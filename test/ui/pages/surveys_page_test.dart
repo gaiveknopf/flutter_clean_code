@@ -13,28 +13,28 @@ class SurveysPresenterSpy extends Mock implements SurveysPresenter {}
 void main() {
   SurveysPresenterSpy presenter;
   StreamController<bool> isLoadingController;
+  StreamController<bool> isSessionExpiredController;
   StreamController<List<SurveyViewModel>> surveysController;
-  StreamController<String> mainErrorController;
   StreamController<String> navigateToController;
 
   void initStreams() {
     isLoadingController = StreamController<bool>();
+    isSessionExpiredController = StreamController<bool>();
     surveysController = StreamController<List<SurveyViewModel>>();
-    mainErrorController = StreamController<String>();
     navigateToController = StreamController<String>();
   }
 
   void mockStreams() {
     when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+    when(presenter.isSessionExpiredStream).thenAnswer((_) => isSessionExpiredController.stream);
     when(presenter.surveysStream).thenAnswer((_) => surveysController.stream);
-    when(presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
     when(presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
   }
 
   void closeStreams() {
     isLoadingController.close();
+    isSessionExpiredController.close();
     surveysController.close();
-    mainErrorController.close();
     navigateToController.close();
   }
 
@@ -47,6 +47,7 @@ void main() {
       getPages: [
         GetPage(name: '/surveys', page: () => SurveysPage(presenter)),
         GetPage(name: '/any_route', page: () => Scaffold(body: Text('fake page'))),
+        GetPage(name: '/login', page: () => Scaffold(body: Text('fake login'))),
       ],
     );
     await tester.pumpWidget(surveysPage);
@@ -83,8 +84,7 @@ void main() {
   testWidgets('Should present error if surveysStream fails', (WidgetTester tester) async {
     await loadPage(tester);
 
-    mainErrorController.add(UIError.unexpected.description);
-    // surveysController.addError(UIError.unexpected.description);
+    surveysController.addError(UIError.unexpected.description);
     await tester.pump();
 
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
@@ -109,8 +109,7 @@ void main() {
   testWidgets('Should call LoadSurveys on reload button click', (WidgetTester tester) async {
     await loadPage(tester);
 
-    // surveysController.addError(UIError.unexpected.description);
-    mainErrorController.add(UIError.unexpected.description);
+    surveysController.addError(UIError.unexpected.description);
     await tester.pump();
     await tester.tap(find.text('Recarregar'));
 
@@ -120,8 +119,7 @@ void main() {
   testWidgets('Should call LoadSurveys on reload button click', (WidgetTester tester) async {
     await loadPage(tester);
 
-    // surveysController.addError(UIError.unexpected.description);
-    mainErrorController.add(UIError.unexpected.description);
+    surveysController.addError(UIError.unexpected.description);
     await tester.pump();
     await tester.tap(find.text('Recarregar'));
 
@@ -148,5 +146,23 @@ void main() {
 
     expect(Get.currentRoute, '/any_route');
     expect(find.text('fake page'), findsOneWidget);
+  });
+
+  testWidgets('Should logout', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    isSessionExpiredController.add(true);
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/login');
+    expect(find.text('fake login'), findsOneWidget);
+  });
+
+  testWidgets('Should not logout', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    isSessionExpiredController.add(false);
+    await tester.pumpAndSettle();
+    expect(Get.currentRoute, '/surveys');
   });
 }

@@ -1,15 +1,13 @@
-import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:meta/meta.dart';
 
 import '../../domain/usecases/usecases.dart';
 import '../../ui/pages/pages.dart';
 
-class GetxSplashPresenter extends SplashPresenter {
+import '../mixins/mixins.dart';
+
+class GetxSplashPresenter extends GetxController with NavigationManager implements SplashPresenter {
   LoadCurrentAccount loadCurrentAccount;
-
-  var _navigateTo = RxString(null);
-
-  Stream<String> get navigateToStream => _navigateTo.stream;
 
   GetxSplashPresenter({@required this.loadCurrentAccount});
 
@@ -17,9 +15,9 @@ class GetxSplashPresenter extends SplashPresenter {
     await Future.delayed(Duration(seconds: durationInSeconds));
     try {
       final account = await loadCurrentAccount.load();
-      _navigateTo.value = account?.token == null ? '/login' : '/surveys';
+      navigateTo = account?.token == null ? '/login' : '/surveys';
     } catch (error) {
-      _navigateTo.value = '/login';
+      navigateTo = '/login';
     }
   }
 }

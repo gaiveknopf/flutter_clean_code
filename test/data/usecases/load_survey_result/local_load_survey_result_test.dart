@@ -51,14 +51,14 @@ void main() {
               SurveyAnswerEntity(
                 image: data['answers'][0]['image'],
                 answer: data['answers'][0]['answer'],
-                isCurrentAnswer: true,
                 percent: 40,
+                isCurrentAnswer: true,
               ),
               SurveyAnswerEntity(
-                answer: data['answers'][0]['answer'],
-                isCurrentAnswer: false,
+                answer: data['answers'][1]['answer'],
                 percent: 60,
-              ),
+                isCurrentAnswer: false,
+              )
             ],
           ));
     });

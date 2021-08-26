@@ -1,4 +1,3 @@
-import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -167,13 +166,13 @@ void main() {
         {
           'id': surveys[0].id,
           'question': surveys[0].question,
-          'date': '2021-07-21T00:00:00.000Z',
+          'date': '2021-08-26T00:00:00.000Z',
           'didAnswer': 'true',
         },
         {
           'id': surveys[1].id,
           'question': surveys[1].question,
-          'date': '2021-07-22T00:00:00.000Z',
+          'date': '2021-08-26T00:00:00.000Z',
           'didAnswer': 'false',
         },
       ];

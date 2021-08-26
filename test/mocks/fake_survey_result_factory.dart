@@ -1,6 +1,7 @@
 import 'package:faker/faker.dart';
 
 import 'package:flutter_app/domain/entities/entities.dart';
+import 'package:flutter_app/ui/pages/pages.dart';
 
 class FakeSurveyResultFactory {
   static Map makeCacheJson() => {
@@ -10,13 +11,13 @@ class FakeSurveyResultFactory {
           {
             'image': faker.internet.httpUrl(),
             'answer': faker.lorem.sentence(),
-            'isCurrentAnswer': 'true',
             'percent': '40',
+            'isCurrentAnswer': 'true',
           },
           {
             'answer': faker.lorem.sentence(),
-            'isCurrentAnswer': 'false',
             'percent': '60',
+            'isCurrentAnswer': 'false',
           }
         ]
       };
@@ -53,6 +54,24 @@ class FakeSurveyResultFactory {
             isCurrentAnswer: false,
             percent: 60,
           )
+        ],
+      );
+
+  static SurveyResultViewModel makeViewModel() => SurveyResultViewModel(
+        surveyId: 'any_id',
+        question: 'Question',
+        answers: [
+          SurveyAnswerViewModel(
+            image: 'Image 0',
+            answer: 'Answer 0',
+            isCurrentAnswer: true,
+            percent: '60%',
+          ),
+          SurveyAnswerViewModel(
+            answer: 'Answer 1',
+            isCurrentAnswer: false,
+            percent: '40%',
+          ),
         ],
       );
 

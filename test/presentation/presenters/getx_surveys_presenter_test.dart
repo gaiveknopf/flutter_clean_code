@@ -8,19 +8,14 @@ import 'package:flutter_app/domain/entities/entities.dart';
 import 'package:flutter_app/ui/pages/pages.dart';
 import 'package:flutter_app/presentation/presenters/presenters.dart';
 
+import '../../mocks/mocks.dart';
+
 class LoadSurveysSpy extends Mock implements LoadSurveys {}
 
 void main() {
   GetxSurveysPresenter sut;
   LoadSurveysSpy loadSurveys;
   List<SurveyEntity> surveys;
-
-  List<SurveyEntity> mockValidData() => [
-        SurveyEntity(
-            id: '1', question: 'Question 1', dateTime: DateTime(2021, 8, 19), didAnswer: true),
-        SurveyEntity(
-            id: '2', question: 'Question 2', dateTime: DateTime(2021, 8, 19), didAnswer: false),
-      ];
 
   PostExpectation mockLoadSurveysCall() => when(loadSurveys.load());
 
@@ -36,7 +31,7 @@ void main() {
   setUp(() {
     loadSurveys = LoadSurveysSpy();
     sut = GetxSurveysPresenter(loadSurveys: loadSurveys);
-    mockLoadSurveys(mockValidData());
+    mockLoadSurveys(FakeSurveysFactory.makeEntity());
   });
 
   test('Should call loadSurveys on loadData', () async {
@@ -50,12 +45,12 @@ void main() {
           SurveyViewModel(
               id: surveys[0].id,
               question: surveys[0].question,
-              date: '19 Aug 2021',
+              date: '26 Aug 2021',
               didAnswer: surveys[0].didAnswer),
           SurveyViewModel(
               id: surveys[1].id,
               question: surveys[1].question,
-              date: '19 Aug 2021',
+              date: '26 Aug 2021',
               didAnswer: surveys[1].didAnswer),
         ])));
     await sut.loadData();

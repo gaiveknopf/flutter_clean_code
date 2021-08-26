@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:get/get.dart';
 
 import 'package:flutter_app/ui/pages/survey_result/components/components.dart';
 import 'package:flutter_app/ui/helpers/helpers.dart';
 import 'package:flutter_app/ui/pages/pages.dart';
+
+import '../helpers/helpers.dart';
 
 class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
 
@@ -39,15 +40,8 @@ void main() {
     presenter = SurveyResultPresenterSpy();
     initStreams();
     mockStreams();
-
-    final surveysPage = GetMaterialApp(
-      initialRoute: '/survey_result/any_survey_id',
-      getPages: [
-        GetPage(name: '/survey_result/:survey_id', page: () => SurveyResultPage(presenter)),
-        GetPage(name: '/login', page: () => Scaffold(body: Text('fake login'))),
-      ],
-    );
-    await mockNetworkImagesFor(() async => tester.pumpWidget(surveysPage));
+    await mockNetworkImagesFor(() async => await tester.pumpWidget(
+        makePage(path: '/survey_result/any_survey_id', page: () => SurveyResultPage(presenter))));
   }
 
   SurveyResultViewModel makeSurveyResult() => SurveyResultViewModel(
@@ -138,7 +132,7 @@ void main() {
     isSessionExpiredController.add(true);
     await tester.pumpAndSettle();
 
-    expect(Get.currentRoute, '/login');
+    expect(currentRoute, '/login');
     expect(find.text('fake login'), findsOneWidget);
   });
 
@@ -147,6 +141,26 @@ void main() {
 
     isSessionExpiredController.add(false);
     await tester.pumpAndSettle();
-    expect(Get.currentRoute, '/survey_result/any_survey_id');
+    expect(currentRoute, '/survey_result/any_survey_id');
+  });
+
+  testWidgets('Should call save list item click', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    surveyResultController.add(makeSurveyResult());
+    await mockNetworkImagesFor(() async => await tester.pump());
+    await tester.tap(find.text('Answer 1'));
+
+    verify(presenter.save(answer: 'Answer 1')).called(1);
+  });
+
+  testWidgets('Should not call save on current answer click', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    surveyResultController.add(makeSurveyResult());
+    await mockNetworkImagesFor(() async => await tester.pump());
+    await tester.tap(find.text('Answer 0'));
+
+    verifyNever(presenter.save(answer: 'Answer 0'));
   });
 }
